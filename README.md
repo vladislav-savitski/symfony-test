@@ -4,6 +4,8 @@ During this test, you'll need to develop a minimal listing of vehicles based on 
 
 You will need to use this github as a starter to match the design.
 
+![Screenshot 2022-03-28 at 17 08 06](https://user-images.githubusercontent.com/34513693/160428961-cd2a1bfb-7ea7-4967-992f-41fa20047211.png)
+
 ### Vehicles data
 
 A data fixture is ready to be loaded inside the Vehicles entity.
