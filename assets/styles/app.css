@@ -1,3 +1,50 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+.toggle-checkbox:checked {
+    @apply: right-0 border-green-400;
+    left: 0;
+}
+.toggle-checkbox:checked + .toggle-label {
+    @apply: bg-green-400;
+}
+input[type=range]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    -webkit-appearance: none;
+}
+.cat{
+    border-radius: 4px;
+    border: 1px solid #18495C;
+    overflow: hidden;
+    float: left;
+}
+
+.cat label {
+    float: left; line-height: 3.0em;
+    width: 8.0em; height: 3.0em;
+}
+
+.cat label span {
+    text-align: center;
+    padding: 3px 0;
+    display: block;
+}
+
+.cat label input {
+    position: absolute;
+    display: none;
+    color: #18495C !important;
+}
+
+.cat label input + span{color: #18495C;}
+
+.cat input:checked + span {
+    color: #ffffff;
+    text-shadow: 0 0  6px rgba(0, 0, 0, 0.8);
+}
+
+.action input:checked + span{background-color: #18495C;}
+.comedy input:checked + span{background-color: #18495C;}
