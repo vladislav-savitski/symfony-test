@@ -440,7 +440,12 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap -mx-4 mt-[30px]">
-                    {% for vehicle in vehicles %}
+                    {% for key,vehicle in vehicles %}
+                        {% if key == 5 %}
+                    <div class="w-1/2 lg:w-1/3 px-4 py-2">
+                        <img class="" alt="Screenshot" src="https://png.pngtree.com/png-vector/20190614/ourlarge/pngtree-adad-blockadvertisementadvertisingblock-solid-glyph-icon-png-image_1477981.jpg">
+                    </div>
+                        {% endif %}
                     <div class="w-1/2 lg:w-1/3 px-4 py-2">
                         <div class="container w-398">
                             {% if not (vehicle.pics is empty) %}

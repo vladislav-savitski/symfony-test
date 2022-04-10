@@ -45,11 +45,7 @@ class VehiclesRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Vehicles[] Returns an array of Vehicles objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByMarkField($value)
     {
         return $this->createQueryBuilder('v')
             ->andWhere('v.exampleField = :val')
@@ -60,7 +56,7 @@ class VehiclesRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Vehicles

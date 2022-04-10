@@ -32,7 +32,8 @@ class DefaultController extends AbstractController
      */
     public function appFilter(): Response
     {
-        $vehicles = $this->doctrineVehicles->findAll();
+//        $vehicles = $this->doctrineVehicles->findAll();
+        $params = [];
         if (isset($_GET['ready_to_go']) && $_GET['ready_to_go'] === 'on') {
             $readyToGo = true;
         } else {
@@ -61,6 +62,7 @@ class DefaultController extends AbstractController
         if (isset($_GET['vehicle_type'])) {
             $vehicle_type = $_GET['vehicle_type'];
         }
+        $vehicles = $this->doctrineVehicles->findByMarkField($mark ?? '');
         return $this->render('app/auto.html.twig', [
             'vehicles' => $vehicles,
             'ready_to_go' => $readyToGo,
