@@ -45,13 +45,11 @@ class VehiclesRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByMarkField($value)
+    public function findAllEnergy()
     {
         return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('v.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('v.energy')
+            ->groupBy('v.energy')
             ->getQuery()
             ->getResult()
         ;

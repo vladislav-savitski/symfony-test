@@ -5,6 +5,14 @@
         <div class="flex flex-wrap -mx-4">
             <div class="w-full md:w-1/4 px-4 mb-12">
                 <form id="filter-form" action="filter" method="get">
+
+                    {% set maxValue = 0 %}
+                    {% set minValue = 0 %}
+
+                    {% for vehicle in vehicles %}
+                        {% set maxValue = max(vehicle.price, maxValue) %}
+                        {% set minValue = min(vehicle.price, minValue) %}
+                    {% endfor %}
                     <div class="flex items-center justify-between mt-4">
                         <p class="uppercase text-[#042A38] font-['Druck'] text-[15px] font-semibold">
                             FILTRER MA RECHERCHE
@@ -15,7 +23,7 @@
                         <div class="relative inline-block w-10 mr-2 align-right select-none transition duration-200 ease-in pt-[16px] ml-[40%]">
                             <input type="checkbox" name="ready_to_go" id="toggle1" onChange="this.form.submit()"
                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4
-                                   appearance-none cursor-pointer right-0" {% if ready_to_go is defined and ready_to_go == true %} checked {% endif %}/>
+                                       appearance-none cursor-pointer right-0" {% if ready_to_go is defined and ready_to_go == true %} checked {% endif %}/>
                             <label for="toggle1" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                         </div>
                     </div>
@@ -24,7 +32,7 @@
                         <div class="relative inline-block w-10 mr-2 align-right select-none transition duration-200 ease-in pt-[16px] ml-[52%]">
                             <input type="checkbox" name="zero_km" id="toggle2" onChange="this.form.submit()"
                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4
-                                   appearance-none cursor-pointer right-0" {% if zero_km is defined and zero_km == true %} checked {% endif %}/>
+                                       appearance-none cursor-pointer right-0" {% if zero_km is defined and zero_km == true %} checked {% endif %}/>
                             <label for="toggle2" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                         </div>
                     </div>
@@ -33,7 +41,7 @@
                         <div class="relative inline-block w-10 mr-2 align-right select-none transition duration-200 ease-in pt-[16px] ml-[41%]">
                             <input type="checkbox" name="promotions" id="toggle3" onChange="this.form.submit()"
                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4
-                                   appearance-none cursor-pointer right-0" {% if promotions is defined and promotions == true %} checked {% endif %}/>
+                                       appearance-none cursor-pointer right-0" {% if promotions is defined and promotions == true %} checked {% endif %}/>
                             <label for="toggle3" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                         </div>
                     </div>
@@ -46,18 +54,18 @@
                         <div class="cat action">
                             <label>
                                 <input class="budget budget-input" id="total" type="checkbox" name="budget"
-                                       value="total" onChange="this.form.submit()" {% if budget is defined and budget == 'total' %} checked {% endif %}><span>Total</span>
+                                       value="total"  {% if budget is defined and budget == 'total' or budget is not defined %} checked {% endif %}><span>Total</span>
                             </label>
                         </div>
                         <div class="cat action">
                             <label>
                                 <input class="budget budget-input" id="mensuel" type="checkbox" name="budget"
-                                       value="mensuel" onChange="this.form.submit()" {% if budget is defined and budget == 'mensuel' %} checked {% endif %}><span>Mensuel</span>
+                                       value="mensuel" {% if budget is defined and budget == 'mensuel' %} checked {% endif %}><span>Mensuel</span>
                             </label>
                         </div>
                     </div>
                     <div class="flex justify-center items-center w-[260px] mt-[15px]">
-                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider(100, 10000, 100, 3200)">
+                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider({{minValue}}, {{maxValue}}, {{minValue}}, {{maxValue}})">
                             <div class="flex items-center relative rounded bg-gray-300 w-[260px] h-2 mt-4"
                                  x-ref="sliderEl"
                                  @mouseup.window="dragLeft = dragRight = false"
@@ -84,9 +92,9 @@
                                      x-ref="maxThumb"><span x-text="`${max}`" ></span></div>
                             </div>
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="min_price" min="100" max="100000" :value="min">
+                                   type="range" name="min_price" min="{{minValue}}" max="{{maxValue}}" :value="min">
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="max_price" min="100" max="100000" :value="max">
+                                   type="range" name="max_price" min="{{minValue}}" max="{{maxValue}}" :value="max">
                         </div>
                         <script>
                             function rangeSlider(rangeMin, rangeMax, min, max) {
@@ -140,10 +148,10 @@
                                         <div class="float-left mt-4">
                                             <div class="form-check">
                                                 <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-                                                bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault1"
-                                                value="Toutes" {% if mark is defined and mark == 'Toutes' %} checked {% endif %}
+                                                    border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
+                                                    focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
+                                                    bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault1"
+                                                       value="Toutes" {% if mark is defined and mark == 'Toutes' %} checked {% endif %}
                                                        onChange="this.form.submit()">
                                                 <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault1">
                                                     Toutes
@@ -151,10 +159,10 @@
                                             </div>
                                             <div class="form-check mt-2">
                                                 <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-                                                bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault2"
-                                                value="Dacia" {% if mark is defined and mark == 'Dacia' %} checked {% endif %}
+                                                    border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
+                                                    focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
+                                                    bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault2"
+                                                       value="Dacia" {% if mark is defined and mark == 'Dacia' %} checked {% endif %}
                                                        onChange="this.form.submit()">
                                                 <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault2">
                                                     Dacia
@@ -162,10 +170,10 @@
                                             </div>
                                             <div class="form-check mt-2">
                                                 <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-                                                bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault3"
-                                                value="Nissan" {% if mark is defined and mark == 'Nissan' %} checked {% endif %}
+                                                    border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
+                                                    focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
+                                                    bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault3"
+                                                       value="Nissan" {% if mark is defined and mark == 'Nissan' %} checked {% endif %}
                                                        onChange="this.form.submit()">
                                                 <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault3">
                                                     Nissan
@@ -173,10 +181,10 @@
                                             </div>
                                             <div class="form-check mt-2">
                                                 <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-                                                bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault4"
-                                                value="Renault" {% if mark is defined and mark == 'Renault' %} checked {% endif %}
+                                                    border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
+                                                    focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
+                                                    bg-contain float-left mr-2 cursor-pointer" type="radio" name="mark" id="flexRadioDefault4"
+                                                       value="Renault" {% if mark is defined and mark == 'Renault' %} checked {% endif %}
                                                        onChange="this.form.submit()">
                                                 <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault4">
                                                     Renault
@@ -193,7 +201,7 @@
                         <div class="bg-white w-full">
                             <div class="transition">
                                 <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75" type="button">
-                                    <div class="space-x-1 py-1">Type de véhicule</div>
+                                    <div class="space-x-1 py-1">Energy</div>
                                     <div class="flex items-center space-x-2 down">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                     </div>
@@ -204,221 +212,141 @@
                                 <div class="accordion-content overflow-hidden max-h-0">
                                     <div class="flex">
                                         <div class="float-left mt-4">
+                                            {% for energy in energies %}
                                             <div class="form-check">
                                                 <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault5" value="Tous"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Tous' %} checked {% endif %}
+                                                    border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
+                                                    focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
+                                                    bg-contain float-left mr-2 cursor-pointer" type="radio" name="energy" id="flexRadioDefault2"
+                                                       value="{{ energy.energy }}"
                                                        onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault5">
-                                                    Tous
+                                                <label class="form-check-label inline-block text-gray-800" for="energy">
+                                                    {{ energy.energy }}
                                                 </label>
                                             </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault6" value="Citadine"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Citadine' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault6">
-                                                    Citadine
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-                                                bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault7" value="Berline"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Berline' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault7">
-                                                    Berline
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault8" value="Break"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Break' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault8">
-                                                    Break
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault9" value="SUV"
-                                                        {% if vehicle_type is defined and vehicle_type == 'SUV' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault9">
-                                                    SUV / 4x4
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault10" value="Monospace"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Monospace' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault10">
-                                                    Monospace / Ludospace
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input appearance-none rounded-full h-4 w-4
-                                                border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600
-                                                focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat
-                                                bg-center bg-contain float-left mr-2 cursor-pointer" type="radio"
-                                                       name="vehicle_type" id="flexRadioDefault11" value="Cabriolet"
-                                                        {% if vehicle_type is defined and vehicle_type == 'Cabriolet' %} checked {% endif %}
-                                                       onChange="this.form.submit()">
-                                                <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault11">
-                                                    Coupé / Cabriolet
-                                                </label>
-                                            </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Modèle</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
+{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
+{#                    <div class="accordion w-[260px]">#}
+{#                        <div class="bg-white w-full">#}
+{#                            <div class="transition">#}
+{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
+{#                                    <div class="space-x-1 py-1">Kilométrage</div>#}
+{#                                    <div class="flex items-center space-x-2 down">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
+{#                                    </div>#}
+{#                                    <div class="flex items-center space-x-2 up hidden">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                                <div class="accordion-content overflow-hidden max-h-0">#}
+{#                                    <div class="flex">#}
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
+{#                    <div class="accordion w-[260px]">#}
+{#                        <div class="bg-white w-full">#}
+{#                            <div class="transition">#}
+{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
+{#                                    <div class="space-x-1 py-1">Année</div>#}
+{#                                    <div class="flex items-center space-x-2 down">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
+{#                                    </div>#}
+{#                                    <div class="flex items-center space-x-2 up hidden">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                                <div class="accordion-content overflow-hidden max-h-0">#}
+{#                                    <div class="flex">#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
+{#                    <div class="accordion w-[260px]">#}
+{#                        <div class="bg-white w-full">#}
+{#                            <div class="transition">#}
+{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
+{#                                    <div class="space-x-1 py-1">Couleur</div>#}
+{#                                    <div class="flex items-center space-x-2 down">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
+{#                                    </div>#}
+{#                                    <div class="flex items-center space-x-2 up hidden">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                                <div class="accordion-content overflow-hidden max-h-0">#}
+{#                                    <div class="flex">#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
+{#                    <div class="accordion w-[260px]">#}
+{#                        <div class="bg-white w-full">#}
+{#                            <div class="transition">#}
+{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
+{#                                    <div class="space-x-1 py-1">Motorisation</div>#}
+{#                                    <div class="flex items-center space-x-2 down">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
+{#                                    </div>#}
+{#                                    <div class="flex items-center space-x-2 up hidden">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                                <div class="accordion-content overflow-hidden max-h-0">#}
+{#                                    <div class="flex">#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
+{#                    <div class="accordion w-[260px]">#}
+{#                        <div class="bg-white w-full">#}
+{#                            <div class="transition">#}
+{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
+{#                                    <div class="space-x-1 py-1">Équipement</div>#}
+{#                                    <div class="flex items-center space-x-2 down">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
+{#                                    </div>#}
+{#                                    <div class="flex items-center space-x-2 up hidden">#}
+{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                                <div class="accordion-content overflow-hidden max-h-0">#}
+{#                                    <div class="flex">#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                    <div class="w-full my-4 mt-[20px] w-[260px]">
+                        <button type="submit" class=" bg-[#18495C] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                            Find
+                        </button>
                     </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Kilométrage</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
-
-                                    </div>
-                                </div>
+                    <div class="w-full my-4 mt-[20px] w-[260px]">
+                        <a href="/">
+                            <div  class="w-full bg-[#18495C] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full text-center">
+                                Reset
                             </div>
-                        </div>
-                    </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Année</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Couleur</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Motorisation</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>
-                    <div class="accordion w-[260px]">
-                        <div class="bg-white w-full">
-                            <div class="transition">
-                                <button class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">
-                                    <div class="space-x-1 py-1">Équipement</div>
-                                    <div class="flex items-center space-x-2 down">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                    <div class="flex items-center space-x-2 up hidden">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                    </div>
-                                </button>
-                                <div class="accordion-content overflow-hidden max-h-0">
-                                    <div class="flex">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -431,16 +359,20 @@
                         <p class="font-medium w-full">
                             Trier par
                         </p>
-                        <select class="select  w-full max-w-xs pr-20">
-                            <option disabled selected>Pertinence</option>
-                            <option>Pertinence</option>
-                            <option>Pertinence</option>
-                            <option>Pertinence</option>
-                        </select>
+                        <form action="filter" method="get">
+                            <select name="order_by" class="select w-full max-w-xs pr-20" onchange="this.form.submit()">
+                                <option disabled selected>Pertinence</option>
+                                <option value="priceASC">Price ASC</option>
+                                <option value="priceDSC">Price DESC</option>
+                                <option value="brandASC">Brand ASC</option>
+                                <option value="brandDSC">Brand DESC</option>
+                            </select>
+                        </form>
                     </div>
                 </div>
                 <div class="flex flex-wrap -mx-4 mt-[30px]">
-                    {% for key,vehicle in vehicles %}
+                    {% if vehicles is defined %}
+                        {% for key,vehicle in vehicles %}
                         {% if key == 5 %}
                     <div class="w-1/2 lg:w-1/3 px-4 py-2">
                         <img class="" alt="Screenshot" src="https://png.pngtree.com/png-vector/20190614/ourlarge/pngtree-adad-blockadvertisementadvertisingblock-solid-glyph-icon-png-image_1477981.jpg">
@@ -497,6 +429,7 @@
 
                     </div>
                     {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>

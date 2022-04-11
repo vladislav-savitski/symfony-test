@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Repository\VehiclesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\Criteria;
 
 class DefaultController extends AbstractController
 {
@@ -18,59 +20,79 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/", name="app_home")
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Response
      */
     public function appDefaultAction(): Response
     {
-        $vehicles = $this->doctrineVehicles->findAll();
-        return $this->render('app/auto.html.twig', ['vehicles' => $vehicles]);
+        $vehicles = $this->doctrineVehicles->findBy([], null, 12, 1);
+        $energies = $this->doctrineVehicles->findAllEnergy();
+        return $this->render('app/auto.html.twig', ['vehicles' => $vehicles, 'energies' => $energies]);
     }
 
     /**
      * @Route("/filter", name="filter")
      * @return Response
      */
-    public function appFilter(): Response
+    public function appFilter(Request $request): Response
     {
-//        $vehicles = $this->doctrineVehicles->findAll();
-        $params = [];
-        if (isset($_GET['ready_to_go']) && $_GET['ready_to_go'] === 'on') {
-            $readyToGo = true;
-        } else {
-            $readyToGo = false;
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+        $readyToGo =  $request->get('ready_to_go', null);
+        $readyToGo = $readyToGo ? true : false;
+
+        $zeroKm =  $request->get('zeroKm', null);
+        $zeroKm = $zeroKm ? true : false;
+
+        $promotions =  $request->get('promotions', null);
+        if ($promotions) {
+            $criteria->andWhere($expr->neq('priceRetail', null));
         }
-        if (isset($_GET['zero_km']) && $_GET['zero_km'] === 'on') {
-            $zeroKm = true;
-        } else {
-            $zeroKm = false;
-        }
-        if (isset($_GET['promotions']) && $_GET['promotions'] === 'on') {
-            $promotions = true;
-        } else {
-            $promotions = false;
-        }
-        if (isset($_GET['budget'])) {
-            if ($_GET['budget'] === 'total') {
-                $budget = 'total';
-            } elseif ($_GET['budget'] === 'mensuel') {
-                $budget = 'mensuel';
+
+        $budget = $request->get('budget', null);
+        if ($budget) {
+            $min = $request->get('min_price', null);
+            $max = $request->get('max_price', null);
+            if ($budget === 'total') {
+                $criteria->andWhere($expr->gt('price', $min));
+                $criteria->andWhere($expr->lt('price', $max));
+            } elseif ($budget === 'mensuel') {
+                $criteria->andWhere($expr->gt('priceMonthly', $min));
+                $criteria->andWhere($expr->lt('priceMonthly', $max));
             }
         }
-        if (isset($_GET['mark'])) {
-            $mark = $_GET['mark'];
+        $mark = $request->get('mark', null);
+        if ($mark) {
+            $criteria->andWhere($expr->gte('brand', $mark));
         }
-        if (isset($_GET['vehicle_type'])) {
-            $vehicle_type = $_GET['vehicle_type'];
+        $energy = $request->get('energy', null);
+        if ($energy) {
+            $criteria->andWhere($expr->gte('energy', $energy));
         }
-        $vehicles = $this->doctrineVehicles->findByMarkField($mark ?? '');
+        $orderBy = $request->get('order_by', null);
+        if ($orderBy) {
+            if ($orderBy === 'priceASC') {
+                $criteria->orderBy(['price' => 'ASC']);
+            } elseif ($orderBy === 'priceDSC') {
+                $criteria->orderBy(['price' => 'DSC']);
+            } elseif ($orderBy === 'brandASC') {
+                $criteria->orderBy(['brand' => 'ASC']);
+            } elseif ($orderBy === 'brandDSC') {
+                $criteria->orderBy(['brand' => 'DSC']);
+            }
+        }
+
+        $criteria->setMaxResults(12);
+        $vehicles = $this->doctrineVehicles->matching($criteria);
+        $energies = $this->doctrineVehicles->findAllEnergy();
         return $this->render('app/auto.html.twig', [
             'vehicles' => $vehicles,
             'ready_to_go' => $readyToGo,
             'zero_km' => $zeroKm,
             'promotions' => $promotions,
-            'budget' => $budget ?? '',
-            'mark' => $mark ?? '',
-            'vehicle_type' => $vehicle_type ?? ''
+            'budget' => $budget,
+            'mark' => $mark,
+            'energies' => $energies
         ]);
     }
 }
