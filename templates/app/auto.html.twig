@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="flex justify-center items-center w-[260px] mt-[15px]">
-                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider({{min_price}}, {{max_price}}, {{min_price}}, {{max_price}})">
+                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider({{min_price[1]}}, {{max_price[1]}}, {{min_price[1]}}, {{max_price[1]}})">
                             <div class="flex items-center relative rounded bg-gray-300 w-[260px] h-2 mt-4"
                                  x-ref="sliderEl"
                                  @mouseup.window="dragLeft = dragRight = false"
@@ -92,9 +92,9 @@
                                      x-ref="maxThumb"><span x-text="`${max}`" ></span></div>
                             </div>
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="min_price" min="{{min_price}}" max="{{max_price}}" :value="min">
+                                   type="range" name="min_price" min="{{min_price[1]}}" max="{{max_price[1]}}" :value="min">
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="max_price" min="{{min_price}}" max="{{max_price}}" :value="max">
+                                   type="range" name="max_price" min="{{min_price[1]}}" max="{{max_price[1]}}" :value="max">
                         </div>
                         <script>
                             function rangeSlider(rangeMin, rangeMax, min, max) {

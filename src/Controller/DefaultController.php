@@ -30,7 +30,13 @@ class DefaultController extends AbstractController
         $pages = ceil(count($this->doctrineVehicles->findAll()) / 12);
         $max = $this->doctrineVehicles->findMaxPrice();
         $min = $this->doctrineVehicles->findMinPrice();
-        return $this->render('app/auto.html.twig', ['vehicles' => $vehicles, 'energies' => $energies, 'pages' => $pages, 'max_price' => $max[0], 'min_price' => $min[0]]);
+        return $this->render('app/auto.html.twig', [
+            'vehicles' => $vehicles,
+            'energies' => $energies,
+            'pages' => $pages,
+            'max_price' => $max[0],
+            'min_price' => $min[0]
+        ]);
     }
 
     /**
@@ -88,11 +94,13 @@ class DefaultController extends AbstractController
         $criteria->setMaxResults(12);
         $vehicles = $this->doctrineVehicles->matching($criteria);
         $energies = $this->doctrineVehicles->findAllEnergy();
-        $pages = ceil(count($this->doctrineVehicles->findAll()) / 12);
+        $pages = ceil(count($vehicles) / 12);
         $page = $request->get('page', null);
         if ($page) {
             $criteria->setFirstResult($page);
         }
+        $max = $this->doctrineVehicles->findMaxPrice();
+        $min = $this->doctrineVehicles->findMinPrice();
         return $this->render('app/auto.html.twig', [
             'vehicles' => $vehicles,
             'ready_to_go' => $readyToGo,
@@ -101,7 +109,9 @@ class DefaultController extends AbstractController
             'budget' => $budget,
             'mark' => $mark,
             'energies' => $energies,
-            'pages' => $pages
+            'pages' => $pages,
+            'max_price' => $max[0],
+            'min_price' => $min[0]
         ]);
     }
 }
