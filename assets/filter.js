@@ -6,3 +6,9 @@ jQuery('.budget').click(function (e) {
         $('#total').prop('checked', false);
     }
 });
+jQuery('.pagination').click(function (e){
+    var page = $(this).attr('id');
+
+    $('#page').val(page);
+    $('#filter-form').submit();
+})

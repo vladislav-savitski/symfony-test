@@ -55,6 +55,23 @@ class VehiclesRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findMaxPrice()
+    {
+        return $this->createQueryBuilder('v')
+            ->select('MAX(v.price)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findMinPrice()
+    {
+        return $this->createQueryBuilder('v')
+            ->select('MIN(v.price)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Vehicles
