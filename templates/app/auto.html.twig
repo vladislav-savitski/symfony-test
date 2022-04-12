@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="flex justify-center items-center w-[260px] mt-[15px]">
-                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider({{min_price[1]}}, {{max_price[1]}}, {{min_price[1]}}, {{max_price[1]}})">
+                        <div class="flex flex-col items-center w-[260px]" x-data="rangeSlider({{min_price}}, {{max_price[1]}}, {{min_price}}, {{max_price[1]}})">
                             <div class="flex items-center relative rounded bg-gray-300 w-[260px] h-2 mt-4"
                                  x-ref="sliderEl"
                                  @mouseup.window="dragLeft = dragRight = false"
@@ -92,9 +92,9 @@
                                      x-ref="maxThumb"><span x-text="`${max}`" ></span></div>
                             </div>
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="min_price" min="{{min_price[1]}}" max="{{max_price[1]}}" :value="min">
+                                   type="range" name="min_price" min="{{min_price}}" max="{{max_price[1]}}" :value="min">
                             <input class="absolute opacity-0 pointer-events-none"
-                                   type="range" name="max_price" min="{{min_price[1]}}" max="{{max_price[1]}}" :value="max">
+                                   type="range" name="max_price" min="{{min_price}}" max="{{max_price[1]}}" :value="max">
                         </div>
                         <script>
                             function rangeSlider(rangeMin, rangeMax, min, max) {
@@ -231,111 +231,6 @@
                             </div>
                         </div>
                     </div>
-{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
-{#                    <div class="accordion w-[260px]">#}
-{#                        <div class="bg-white w-full">#}
-{#                            <div class="transition">#}
-{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
-{#                                    <div class="space-x-1 py-1">Kilométrage</div>#}
-{#                                    <div class="flex items-center space-x-2 down">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
-{#                                    </div>#}
-{#                                    <div class="flex items-center space-x-2 up hidden">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
-{#                                    </div>#}
-{#                                </button>#}
-{#                                <div class="accordion-content overflow-hidden max-h-0">#}
-{#                                    <div class="flex">#}
-
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
-{#                    <div class="accordion w-[260px]">#}
-{#                        <div class="bg-white w-full">#}
-{#                            <div class="transition">#}
-{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
-{#                                    <div class="space-x-1 py-1">Année</div>#}
-{#                                    <div class="flex items-center space-x-2 down">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
-{#                                    </div>#}
-{#                                    <div class="flex items-center space-x-2 up hidden">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
-{#                                    </div>#}
-{#                                </button>#}
-{#                                <div class="accordion-content overflow-hidden max-h-0">#}
-{#                                    <div class="flex">#}
-
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
-{#                    <div class="accordion w-[260px]">#}
-{#                        <div class="bg-white w-full">#}
-{#                            <div class="transition">#}
-{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
-{#                                    <div class="space-x-1 py-1">Couleur</div>#}
-{#                                    <div class="flex items-center space-x-2 down">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
-{#                                    </div>#}
-{#                                    <div class="flex items-center space-x-2 up hidden">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
-{#                                    </div>#}
-{#                                </button>#}
-{#                                <div class="accordion-content overflow-hidden max-h-0">#}
-{#                                    <div class="flex">#}
-
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
-{#                    <div class="accordion w-[260px]">#}
-{#                        <div class="bg-white w-full">#}
-{#                            <div class="transition">#}
-{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
-{#                                    <div class="space-x-1 py-1">Motorisation</div>#}
-{#                                    <div class="flex items-center space-x-2 down">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
-{#                                    </div>#}
-{#                                    <div class="flex items-center space-x-2 up hidden">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
-{#                                    </div>#}
-{#                                </button>#}
-{#                                <div class="accordion-content overflow-hidden max-h-0">#}
-{#                                    <div class="flex">#}
-
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="w-full border-b my-4 mt-[20px] w-[260px]"></div>#}
-{#                    <div class="accordion w-[260px]">#}
-{#                        <div class="bg-white w-full">#}
-{#                            <div class="transition">#}
-{#                                <button type="button" class="accordion-header cursor-pointer transition flex w-full cursor-pointer items-center justify-between py-1 dark:bg-gray-800 hover:dark:bg-gray-800/75">#}
-{#                                    <div class="space-x-1 py-1">Équipement</div>#}
-{#                                    <div class="flex items-center space-x-2 down">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>#}
-{#                                    </div>#}
-{#                                    <div class="flex items-center space-x-2 up hidden">#}
-{#                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-gray-700 dark:text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>#}
-{#                                    </div>#}
-{#                                </button>#}
-{#                                <div class="accordion-content overflow-hidden max-h-0">#}
-{#                                    <div class="flex">#}
-
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
                     <div class="w-full my-4 mt-[20px] w-[260px]">
                         <button type="submit" class=" bg-[#18495C] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
                             Find
@@ -428,16 +323,20 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                <div class="text-center">
-                    {% for i in 1..pages %}
-                        <a class="pagination mr-2" href="#" id="{{ i }}">{{ i }}</a>
-                    {% endfor %}
-                </div>
+            </div>
+        </div>
+        </form>
+        {% if pages is defined %}
+        <form id="pagination">
+            <div class="text-center">
+                {% for i in 1..pages %}
+                    <a class="pagination mr-2" href="#" id="{{ i }}">{{ i }}</a>
+                {% endfor %}
                 <div class="hidden">
                     <input id="page" name="page" value="0">
                 </div>
             </div>
-        </div>
         </form>
+        {% endif %}
     </div>
 {% endblock %}

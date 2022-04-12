@@ -21,11 +21,16 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="app_home")
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int $limit
      * @return Response
      */
-    public function appDefaultAction(): Response
+    public function appDefaultAction(Request $request, int $limit = 12): Response
     {
-        $vehicles = $this->doctrineVehicles->findBy([], null, 12, 1);
+        if ($page = $request->get('page', null)) {
+            $vehicles = $this->doctrineVehicles->findBy([], null, $limit, ($page - 1) * $limit);
+        } else {
+            $vehicles = $this->doctrineVehicles->findBy([], null, $limit, 0);
+        }
         $energies = $this->doctrineVehicles->findAllEnergy();
         $pages = ceil(count($this->doctrineVehicles->findAll()) / 12);
         $max = $this->doctrineVehicles->findMaxPrice();
@@ -35,7 +40,7 @@ class DefaultController extends AbstractController
             'energies' => $energies,
             'pages' => $pages,
             'max_price' => $max[0],
-            'min_price' => $min[0]
+            'min_price' => 0
         ]);
     }
 
@@ -58,8 +63,7 @@ class DefaultController extends AbstractController
             $criteria->andWhere($expr->neq('priceRetail', null));
         }
 
-        $budget = $request->get('budget', null);
-        if ($budget) {
+        if ($budget = $request->get('budget', null)) {
             $min = $request->get('min_price', null);
             $max = $request->get('max_price', null);
             if ($budget === 'total') {
@@ -70,16 +74,16 @@ class DefaultController extends AbstractController
                 $criteria->andWhere($expr->lt('priceMonthly', $max));
             }
         }
-        $mark = $request->get('mark', null);
-        if ($mark) {
+
+        if ($mark = $request->get('mark', null)) {
             $criteria->andWhere($expr->gte('brand', $mark));
         }
-        $energy = $request->get('energy', null);
-        if ($energy) {
+
+        if ($energy = $request->get('energy', null)) {
             $criteria->andWhere($expr->gte('energy', $energy));
         }
-        $orderBy = $request->get('order_by', null);
-        if ($orderBy) {
+
+        if ($orderBy = $request->get('order_by', null)) {
             if ($orderBy === 'priceASC') {
                 $criteria->orderBy(['price' => 'ASC']);
             } elseif ($orderBy === 'priceDSC') {
@@ -91,14 +95,9 @@ class DefaultController extends AbstractController
             }
         }
 
-        $criteria->setMaxResults(12);
         $vehicles = $this->doctrineVehicles->matching($criteria);
         $energies = $this->doctrineVehicles->findAllEnergy();
-        $pages = ceil(count($vehicles) / 12);
-        $page = $request->get('page', null);
-        if ($page) {
-            $criteria->setFirstResult($page);
-        }
+
         $max = $this->doctrineVehicles->findMaxPrice();
         $min = $this->doctrineVehicles->findMinPrice();
         return $this->render('app/auto.html.twig', [
@@ -109,9 +108,8 @@ class DefaultController extends AbstractController
             'budget' => $budget,
             'mark' => $mark,
             'energies' => $energies,
-            'pages' => $pages,
             'max_price' => $max[0],
-            'min_price' => $min[0]
+            'min_price' => 0
         ]);
     }
 }
